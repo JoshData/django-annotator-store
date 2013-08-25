@@ -86,7 +86,7 @@ class Index(BaseStorageView):
 		obj.data = "{ }"
 		obj.update_from_json(client_data)
 		obj.save()
-		return obj.as_json() # Spec wants redirect but warns of browser bugs, so return the object.
+		return obj.as_json(request.user) # Spec wants redirect but warns of browser bugs, so return the object.
 
 class Annot(BaseStorageView):
 	http_method_names = ['get', 'put', 'delete']
@@ -94,7 +94,7 @@ class Annot(BaseStorageView):
 	def get(self, request, guid):
 		# read. Returns the annotation.
 		obj = Annotation.objects.get(guid=guid) # exception caught by base view
-		return obj.as_json()
+		return obj.as_json(request.user)
 	
 	def put(self, request, client_data, guid):
 		# update. Updates the annotation.
@@ -105,7 +105,7 @@ class Annot(BaseStorageView):
 		
 		obj.update_from_json(client_data)
 		obj.save()
-		return obj.as_json() # Spec wants redirect but warns of browser bugs, so return the object.
+		return obj.as_json(request.user) # Spec wants redirect but warns of browser bugs, so return the object.
 		
 	def delete(self, request, guid):
 		obj = Annotation.objects.get(guid=guid) # exception caught by base view
@@ -126,7 +126,7 @@ class Search(BaseStorageView):
 		qs = Annotation.objects.filter(document=document)
 		return {
 			"total": qs.count(),
-			"rows": Annotation.as_list(qs)
+			"rows": Annotation.as_list(qs=qs, user=request.user)
 		}
 		
 class EditorView(TemplateView):

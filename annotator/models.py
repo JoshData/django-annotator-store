@@ -57,10 +57,10 @@ class Annotation(models.Model):
 		self.data = json.dumps(d)
 		
 	@staticmethod
-	def as_list(qs=None):
+	def as_list(qs=None, user=None):
 		if qs == None: qs = Annotation.objects.all()
 		return [
-			obj.as_json()
+			obj.as_json(user=user)
 			for obj in qs.order_by('-updated')
 		]
 
