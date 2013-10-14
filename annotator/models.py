@@ -15,7 +15,7 @@ class Document(models.Model):
 
 class Annotation(models.Model):
 	owner = models.ForeignKey(User, db_index=True, blank=True, null=True)
-	document = models.ForeignKey(Document, db_index=True)
+	document = models.ForeignKey(Document, db_index=True, related_name="annotations")
 	guid = models.CharField(max_length=64, unique=True, editable=False)
 	created = models.DateTimeField(auto_now_add=True, db_index=True)
 	updated = models.DateTimeField(auto_now=True, db_index=True)
